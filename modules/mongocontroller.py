@@ -1,5 +1,4 @@
 import pymongo
-import json
 
 class MongoController():
   __client = None
@@ -7,7 +6,7 @@ class MongoController():
   __co = None
   
   def __init__(self, host, port):
-    self.__client = pymongo.MongoClient(host, port)
+    self.__client = pymongo.MongoClient(str(host), int(port))
     self.__db = self.__client.resetter
 
   def __del__(self):
@@ -18,7 +17,7 @@ class MongoController():
   
   def add_token(self, uid, token):
     self.select_coll_tokens()
-    return self.__co.insert_one({"uid": uid, "token": token})
+    return self.__co.update_one({"uid": uid}, {"$set": {"token": token}})
 
   def get_token(self, uid):
     self.select_coll_tokens()
